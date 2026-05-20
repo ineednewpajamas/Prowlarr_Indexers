@@ -437,7 +437,7 @@ git_branch_reset() {
     if [ "$pulls_exists" = false ]; then
         if [ "$local_exist" = true ]; then
             git checkout -B "$prowlarr_target_branch"
-            log "INFO" "Checked out out local branch [$prowlarr_target_branch]"
+            log "INFO" "Checked out local branch [$prowlarr_target_branch]"
             if [ "$is_dev_exec" = true ] || [ "$is_jackett_dev" = true ]; then
                 log "DEBUG" "[$is_dev_exec] skipping reset to [$prowlarr_remote_name/$PROWLARR_RELEASE_BRANCH]"
             else
@@ -451,7 +451,7 @@ git_branch_reset() {
     else
         if [ "$local_exist" = true ]; then
             git checkout -B "$prowlarr_target_branch"
-            log "INFO" "Checked out out local branch [$prowlarr_target_branch]"
+            log "INFO" "Checked out local branch [$prowlarr_target_branch]"
             if [ "$is_dev_exec" = true ] || [ "$is_jackett_dev" = true ]; then
                 log "DEBUG" "Development Mode - Skipping reset to [$prowlarr_remote_name/$prowlarr_target_branch]"
             else
@@ -498,6 +498,9 @@ pull_cherry_and_merge() {
     log "INFO" "Reviewing Commits"
     existing_message=$(git log --format=%B -n1)
     existing_message_ln1=$(echo "$existing_message" | awk 'NR==1')
+
+    log "DEBUG" "Existing Commit Message: $existing_message"
+    log "DEBUG" "Existing Commit Message Line 1: $existing_message_ln1"
 
     log "DEBUG" "Searching for commits with template: '$PROWLARR_COMMIT_TEMPLATE'"
     log "DEBUG" "Searching in last $MAX_COMMITS_TO_SEARCH commits"
@@ -564,6 +567,10 @@ pull_cherry_and_merge() {
     fi
     log "INFO" "Commit Range is: [$commit_range]"
     log "INFO" "-- Beginning Cherrypicking ---"
+    # If diff.renames is true then removals and additions can be rendered as renames instead
+    # Docs say merge.renames defaults to diff.renames, but false causes directoryRenames to be ignored
+    git config diff.renames false
+    git config merge.renames true
     git config merge.directoryRenames true
     git config merge.verbosity 0
     sleep 2
@@ -1130,7 +1137,7 @@ cleanup_and_commit() {
 push_changes() {
     push_branch="$prowlarr_target_branch"
     log "INFO" "Evaluating for Push to Remote"
-    log "DEBUG" " Push Modes for Branch: $push_branch"
+    log "DEBUG" "Push Modes for Branch: $push_branch"
     log "DEBUG" "Push To Remote: $push_mode with Force Push With Lease: $push_mode_force"
 
     # Safety check: NEVER force push to master or main branches
