@@ -9,11 +9,10 @@
 ### - Automated conflict resolution for indexer syncing
 ##
 ## Requirements
-### Prowlarr/Indexers local git repo exists
+### Prowlarr/Indexers local git repo or fork exists
 ### Set variables as needed
-### Typically only prowlarr_git_path would be needed to be set
 ## Using the Script
-### Suggested to run from the current directory being Prowlarr/Indexers local Repo using Git Bash `./scripts/indexer-sync-v2.sh`
+### Suggested to run from the current directory being Prowlarr/Indexers local Repo or fork using Bash / Git Bash `./scripts/indexer-sync-v2.sh`
 ### Use -d for DEBUG logging, -v for VERBOSE logging
 # Default values
 DEBUG=${DEBUG:-false}
